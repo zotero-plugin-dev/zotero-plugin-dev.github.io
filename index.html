@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Zotero Plugin Dev Community</title>
+    <meta
+      name="description"
+      content="Resources for Zotero Plugin Development: Documentation, Tools, Scaffolds, and Community Guides."
+    />
+    <style>
+      /* CSS Variables for easy theming */
+      :root {
+        --primary-color: #cc2936;
+        /* Zotero Brand Red */
+        --primary-hover: #a3202b;
+        --bg-color: #f8f9fa;
+        --card-bg: #ffffff;
+        --text-main: #2c3e50;
+        --text-sec: #596b7d;
+        --border-color: #e1e4e8;
+        --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        --radius: 8px;
+      }
+
+      /* Dark Mode Support */
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg-color: #0d1117;
+          --card-bg: #161b22;
+          --text-main: #c9d1d9;
+          --text-sec: #8b949e;
+          --border-color: #30363d;
+          --shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+        }
+      }
+
+      /* Reset & Base Styles */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        line-height: 1.6;
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+      }
+
+      /* Header Styles */
+      header {
+        text-align: center;
+        margin-bottom: 4rem;
+        padding-top: 2rem;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        font-weight: 800;
+      }
+
+      h1 span {
+        color: var(--primary-color);
+      }
+
+      .subtitle {
+        font-size: 1.2rem;
+        color: var(--text-sec);
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      /* Section Styles */
+      section {
+        margin-bottom: 4rem;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+      }
+
+      /* Card Styles */
+      .card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius);
+        padding: 1.5rem;
+        transition: transform 0.2s, box-shadow 0.2s;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow);
+        border-color: var(--primary-color);
+      }
+
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 0.8rem;
+      }
+
+      .card-title {
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: var(--text-main);
+      }
+
+      .card-desc {
+        font-size: 0.95rem;
+        color: var(--text-sec);
+        flex-grow: 1;
+        margin-bottom: 1.2rem;
+      }
+
+      /* Button Styles */
+      .links {
+        display: flex;
+        gap: 0.8rem;
+        margin-top: auto;
+      }
+
+      .btn {
+        text-decoration: none;
+        font-size: 0.85rem;
+        padding: 0.4rem 0.8rem;
+        border-radius: 4px;
+        font-weight: 600;
+        transition: background-color 0.2s;
+      }
+
+      .btn-primary {
+        background-color: var(--primary-color);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background-color: var(--primary-hover);
+      }
+
+      .btn-outline {
+        border: 1px solid var(--border-color);
+        color: var(--text-main);
+      }
+
+      .btn-outline:hover {
+        border-color: var(--text-sec);
+        background-color: rgba(128, 128, 128, 0.05);
+      }
+
+      /* Tag Styles */
+      .tag {
+        font-size: 0.75rem;
+        padding: 0.2rem 0.5rem;
+        border-radius: 12px;
+        background-color: rgba(204, 41, 54, 0.1);
+        color: var(--primary-color);
+        font-weight: 600;
+      }
+
+      /* Warning/Info Box */
+      .info-box {
+        background-color: rgba(204, 41, 54, 0.05);
+        border: 1px solid rgba(204, 41, 54, 0.2);
+        border-radius: var(--radius);
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        font-size: 0.9rem;
+        color: var(--text-sec);
+      }
+
+      /* Footer */
+      footer {
+        text-align: center;
+        padding: 2rem;
+        color: var(--text-sec);
+        font-size: 0.9rem;
+        border-top: 1px solid var(--border-color);
+      }
+
+      footer a {
+        color: var(--primary-color);
+        text-decoration: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <header>
+        <h1>Zotero <span>Plugin Dev</span></h1>
+        <p class="subtitle">
+          The hub for Zotero plugin development. Curated documentation, tools,
+          scaffolds, and community resources.
+        </p>
+      </header>
+
+      <main>
+        <!-- Getting Started: Docs & Templates -->
+        <section>
+          <h2>🚀 Getting Started</h2>
+          <div class="grid">
+            <div class="card">
+              <div class="card-header">
+                <span class="card-title">Community Documentation</span>
+                <span class="tag">Essential</span>
+              </div>
+              <p class="card-desc">
+                The comprehensive guide maintained by the community. Covers
+                environment setup, core APIs, and Zotero architecture details.
+              </p>
+              <div class="links">
+                <a
+                  href="https://windingwind.github.io/doc-for-zotero-plugin-dev/"
+                  class="btn btn-primary"
+                  target="_blank"
+                  >Read</a
+                >
+                <a
+                  href="https://github.com/windingwind/doc-for-zotero-plugin-dev"
+                  class="btn btn-outline"
+                  target="_blank"
+                  >GitHub</a
+                >
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <span class="card-title">Zotero Plugin Template</span>
+                <span class="tag">Starter</span>
+              </div>
+              <p class="card-desc">
+                A robust TypeScript-based template for Zotero plugins. Includes
+                best practices and pre-configured settings to start coding
+                immediately.
+              </p>
+              <div class="links">
+                <a
+                  href="https://github.com/new?template_name=zotero-plugin-template&template_owner=windingwind"
+                  class="btn btn-primary"
+                  target="_blank"
+                  >Use this template</a
+                >
+                <a
+                  href="https://github.com/windingwind/zotero-plugin-template"
+                  class="btn btn-outline"
+                  target="_blank"
+                  >GitHub</a
+                >
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <span class="card-title">Official Developer Docs</span>
+              </div>
+              <p class="card-desc">
+                The official technical reference. Contains the critical
+                "Migration Guide" for updating plugins to Zotero 7/8.
+              </p>
+              <div class="links">
+                <a
+                  href="https://www.zotero.org/support/dev/"
+                  class="btn btn-outline"
+                  target="_blank"
+                  >Read</a
+                >
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <span class="card-title">Official Template</span>
+              </div>
+              <p class="card-desc">
+                "Make It Red". The official minimal example. Good for
+                understanding the most basic plugin structure without extra
+                tooling.
+              </p>
+              <div class="links">
+                <a
+                  href="https://github.com/zotero/make-it-red/"
+                  class="btn btn-outline"
+                  target="_blank"
+                  >GitHub</a
+                >
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Core Libraries & Tools -->
+        <section>
+          <h2>🛠️ Core Libraries & Tools</h2>
+          <div class="grid">
+            <div class="card">
+              <div class="card-header">
+                <span class="card-title">Zotero Plugin Scaffold</span>
+                <!-- <span class="tag">Recommended</span> -->
+              </div>
+              <p class="card-desc">
+                The modern development workflow. Features plugin side-loading,
+                hot-reloading on source change, bundling, and release
+                management.
+              </p>
+              <div class="links">
+                <a
+                  href="https://zotero-plugin-dev.github.io/zotero-plugin-scaffold/"
+                  class="btn btn-primary"
+                  target="_blank"
+                  >Documentation</a
+                >
+                <a
+                  href="https://github.com/zotero-plugin-dev/zotero-plugin-scaffold"
+                  class="btn btn-outline"
+                  target="_blank"
+                  >GitHub</a
+                >
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <span class="card-title">Zotero Plugin Toolkit</span>
+              </div>
+              <p class="card-desc">
+                Essential API wrappers. Simplifies registering shortcuts,
+                creating UI dialogs, and clipboard operations to speed up
+                development.
+              </p>
+              <div class="links">
+                <a
+                  href="https://windingwind.github.io/zotero-plugin-toolkit/"
+                  class="btn btn-primary"
+                  target="_blank"
+                  >Documentation</a
+                >
+                <a
+                  href="https://github.com/windingwind/zotero-plugin-toolkit"
+                  class="btn btn-outline"
+                  target="_blank"
+                  >GitHub</a
+                >
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <span class="card-title">Zotero Types</span>
+              </div>
+              <p class="card-desc">
+                TypeScript definitions for Zotero APIs. Enables code completion,
+                type checking, and safer development experiences.
+              </p>
+              <div class="links">
+                <a
+                  href="https://github.com/windingwind/zotero-types"
+                  class="btn btn-outline"
+                  target="_blank"
+                  >GitHub</a
+                >
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Ecosystem & Registry -->
+        <section>
+          <h2>📦 Plugin Market & Registry</h2>
+          <div class="info-box">
+            <strong>Submission Guide:</strong> The
+            <em>Zotero Plugin Registry</em> is currently under development.
+            Developers are encouraged to submit their plugins to the
+            <em>Zotero Chinese List</em> for now. This list will eventually be
+            merged into the official registry.
+          </div>
+          <div class="grid">
+            <div class="card">
+              <div class="card-header">
+                <span class="card-title">Zotero Chinese List</span>
+                <span class="tag">Active</span>
+              </div>
+              <p class="card-desc">
+                The current active community-maintained list of Zotero plugins.
+                Please submit your new plugins here to be discovered by users.
+              </p>
+              <div class="links">
+                <a
+                  href="https://zotero-chinese.com/plugins"
+                  class="btn btn-primary"
+                  target="_blank"
+                  >Browse List</a
+                >
+                <a
+                  href="https://github.com/zotero-chinese/zotero-plugins"
+                  class="btn btn-outline"
+                  target="_blank"
+                  >GitHub</a
+                >
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <span class="card-title">Official Plugin List</span>
+                <span class="tag">Active</span>
+              </div>
+              <p class="card-desc">
+                This is a list of plugins provided in an official document.
+              </p>
+              <div class="links">
+                <a
+                  href="https://www.zotero.org/support/plugins"
+                  class="btn btn-outline"
+                  target="_blank"
+                  >Browse List</a
+                >
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <span class="card-title">Plugin Registry</span>
+                <span class="tag">WIP</span>
+              </div>
+              <p class="card-desc">
+                The upcoming official registry for the Zotero Plugin Dev
+                community. It will provide a centralized repository for all
+                community plugins.
+              </p>
+              <div class="links">
+                <a
+                  href="https://github.com/zotero-plugin-dev/zotero-plugin-registry"
+                  class="btn btn-outline"
+                  target="_blank"
+                  >GitHub</a
+                >
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Workflow & Standards -->
+        <section>
+          <h2>⚙️ Workflow & Standards</h2>
+          <div class="grid">
+            <div class="card">
+              <div class="card-header">
+                <span class="card-title">ESLint Config</span>
+              </div>
+              <p class="card-desc">
+                @zotero-plugin-dev/eslint-config.<br />Custom ESLint rules
+                tailored specifically for Zotero plugin codebases.
+              </p>
+              <div class="links">
+                <a
+                  href="https://www.npmjs.com/package/@zotero-plugin-dev/eslint-config"
+                  class="btn btn-outline"
+                  target="_blank"
+                  >NPM</a
+                >
+                <a
+                  href="https://github.com/zotero-plugin-dev/eslint-config"
+                  class="btn btn-outline"
+                  target="_blank"
+                  >GitHUb</a
+                >
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <span class="card-title">Renovate Preset</span>
+              </div>
+              <p class="card-desc">
+                Configuration preset for Renovate. Automates dependency updates
+                to keep your plugin secure and up-to-date.
+              </p>
+              <div class="links">
+                <a
+                  href="https://github.com/zotero-plugin-dev/renovate"
+                  class="btn btn-outline"
+                  target="_blank"
+                  >GitHub</a
+                >
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Community -->
+        <section>
+          <h2>🔗 Source & Community</h2>
+          <div class="grid">
+            <div class="card">
+              <div class="card-header">
+                <span class="card-title">Zotero Source Code</span>
+              </div>
+              <p class="card-desc">
+                The source code for the Zotero client on GitHub. Reading the
+                source is the ultimate way to understand internal mechanisms.
+              </p>
+              <div class="links">
+                <a
+                  href="https://github.com/zotero/zotero"
+                  class="btn btn-outline"
+                  target="_blank"
+                  >Browse Code</a
+                >
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <span class="card-title">Zotero Dev Group</span>
+              </div>
+              <p class="card-desc">
+                The official Google Group for developers. Connect with the core
+                team and discuss low-level API details.
+              </p>
+              <div class="links">
+                <a
+                  href="https://groups.google.com/g/zotero-dev"
+                  class="btn btn-outline"
+                  target="_blank"
+                  >Join Discussion</a
+                >
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <p>&copy; 2025 Zotero Plugin Dev Community.</p>
+        <p>Resources curated for the open source community.</p>
+      </footer>
+    </div>
+  </body>
+</html>
